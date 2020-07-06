@@ -57,7 +57,7 @@ queue = {}
 
 function keyPressed(key)
     for i=1, #queue, 1 do
-        if queue[i].key == key then print("desired key pressed") if queue[i].showText ~= nil then print('closing?') SendNUIMessage({ action = 'hideTopText'}) end TriggerEvent('matif_needs:callFunction', queue[i].fnc) table.remove(queue, i) end
+        if queue[i].key == key then if queue[i].showText ~= nil then SendNUIMessage({ action = 'hideTopText'}) end TriggerEvent('matif_needs:callFunction', queue[i].fnc) table.remove(queue, i) end
     end 
 end
 
@@ -82,7 +82,7 @@ end
 RegisterNetEvent('matif_needs:removeFromWait')
 AddEventHandler('matif_needs:removeFromWait', function(id)
     for k,v in pairs(queue) do
-        if v.id == id then table.remove(queue, k) if v.showText ~= nil then print('closing?') SendNUIMessage({ action = 'hideTopText'}) end end
+        if v.id == id then table.remove(queue, k) if v.showText ~= nil then SendNUIMessage({ action = 'hideTopText'}) end end
     end
 end)  
 

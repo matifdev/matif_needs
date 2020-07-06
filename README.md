@@ -16,7 +16,7 @@ text -> if this is set top text will be enabled (discover what top text is below
 
 * Optimized Top Text
 
-
+![image](https://user-images.githubusercontent.com/25308309/86548794-960fa100-bf35-11ea-83d3-8585a2e23e06.png)
 
 ```
 TriggerEvent('matif_needs:showTopText', text)

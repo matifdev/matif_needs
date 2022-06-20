@@ -57,3 +57,62 @@ TriggerEvent('matif_needs:removeMiddleText')
 
 # this will remove the current Middle Text
 ```
+
+* Markers
+
+```
+TriggerEvent('matif_needs:addMarker', name, info)
+
+name -> marker reference name
+info -> table: type, coords, scaleX, scaleY, scaleZ, red, green, blue, alpha
+
+# Add new marker
+```
+
+```
+TriggerEvent('matif_needs:removeMarker', name)
+
+# Remove marker by name
+```
+
+* Groups
+
+```
+exports['matif_needs']:getPlayerGroup(id)
+
+id - > Player Id
+
+# Returns groupIndex
+```
+
+```
+exports['matif_needs']:isGroupBusy(groupIndex)
+
+groupIndex - > Group Index
+
+# Returns groupIndex
+```
+
+```
+exports['matif_needs']:setGroupBusy(groupIndex)
+
+groupIndex - > Group Index
+
+# Sets group busy by groupIndex.
+```
+
+```
+exports['matif_needs']:getGroupLeader(groupIndex)
+
+groupIndex - > Group Index
+
+# Returns group leader by groupIndex.
+```
+
+```
+exports['matif_needs']:getGroupMembers(groupIndex)
+
+groupIndex - > Group Index
+
+# Returns group members by groupIndex.
+```

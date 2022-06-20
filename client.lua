@@ -25,27 +25,29 @@ lastPresses = {}
 Citizen.CreateThread(function() 
     while true do
         Citizen.Wait(50)
-        local pressed = {}
-        for k,v in pairs(Keys) do
-            if IsControlPressed(0, v) then
-                table.insert(pressed, {value = v, key = k})
+        if #queue > 0 then
+            local pressed = {}
+            for k,v in pairs(Keys) do
+                if IsControlPressed(0, v) then
+                    table.insert(pressed, {value = v, key = k})
+                end
             end
-        end
-        for i=1, #lastPresses, 1 do
-            if lastPresses[i] ~= nil then 
-                if not IsControlPressed(0, lastPresses[i]) then table.remove(lastPresses, i) end 
-                for ii=1, #pressed, 1 do
-                    if pressed[ii] ~= nil then
-                        if lastPresses[i] == pressed[ii].value then 
-                            pressed[ii] = nil
+            for i=1, #lastPresses, 1 do
+                if lastPresses[i] ~= nil then 
+                    if not IsControlPressed(0, lastPresses[i]) then table.remove(lastPresses, i) end 
+                    for ii=1, #pressed, 1 do
+                        if pressed[ii] ~= nil then
+                            if lastPresses[i] == pressed[ii].value then 
+                                pressed[ii] = nil
+                            end
                         end
                     end
                 end
             end
-        end
-        for i=1, #pressed, 1 do
-            if pressed[i] ~= nil then
-                table.insert(lastPresses, pressed[i]['value']) keyPressed(pressed[i]['key'])
+            for i=1, #pressed, 1 do
+                if pressed[i] ~= nil then
+                    table.insert(lastPresses, pressed[i]['value']) keyPressed(pressed[i]['key'])
+                end
             end
         end
     end
@@ -62,7 +64,7 @@ end
 RegisterNetEvent('matif_needs:waitForKey')
 AddEventHandler('matif_needs:waitForKey', function(id, key, fnc, showText)
     if not alreadyWaiting(id) then
-        table.insert(queue, {id = id, key = key, fnc = fnc, showText = showText})
+        table.insert(queue, {id = id, key = key, fnc = fnc, showText = showText, ownerResource = GetInvokingResource()})
         if showText ~= nil then SendNUIMessage({ action = 'showTopText', text = showText }) end
     else
         print("ERROR: You already have a wait with this id(" .. id .. ")")
@@ -126,3 +128,45 @@ AddEventHandler('matif_needs:removeTopText', function()
         action = 'hideTopText'
     })
 end) 
+
+AddEventHandler('onResourceStop', function(resourceName)
+    for k,v in pairs(queue) do
+        if v.ownerResource == resourceName then
+            table.remove(queue, k) if v.showText ~= nil then SendNUIMessage({ action = 'hideTopText'}) end 
+        end
+    end
+    for k,v in pairs(blipQueue) do
+        if v.ownerResource == resourceName then
+            blipQueue[k] = nil
+        end
+    end
+end) 
+
+blipQueue = {}
+
+
+RegisterNetEvent('matif_needs:addMarker')
+AddEventHandler('matif_needs:addMarker', function(name, info)
+    table.insert(blipQueue, {name = name, info = info, ownerResource = GetInvokingResource()})
+end) 
+
+RegisterNetEvent('matif_needs:removeMarker')
+AddEventHandler('matif_needs:removeMarker', function(name)
+    for k,v in pairs(blipQueue) do
+        if v.name == name then
+            table.remove(blipQueue, k)
+        end 
+    end
+end) 
+
+Citizen.CreateThread(function() 
+    while true do
+        Wait(100)
+        while #blipQueue > 0 do
+            Wait(5)
+            for k,v in pairs(blipQueue) do
+                DrawMarker(v.info.type, v.info.coords.x, v.info.coords.y, v.info.coords.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, v.info.scaleX, v.info.scaleY, v.info.scaleZ, v.info.red, v.info.green, v.info.blue, v.info.alpha, false, true, 2, false, nil, nil, false)
+            end
+        end
+    end
+end)

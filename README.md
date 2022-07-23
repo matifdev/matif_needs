@@ -1,5 +1,6 @@
 # matif_needs
-FiveM resourced aimed to optimize scripts coded by me.
+FiveM resource made in order to optimize other matif resources.
+This resource is completely standalone.
 
 # Usage
 
